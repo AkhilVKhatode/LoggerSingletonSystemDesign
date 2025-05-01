@@ -48,3 +48,41 @@ Log: Application started.
 
 ### Why Use Singleton?
 The Singleton pattern is useful when you want to ensure that only one instance of a class exists and provides a global point of access. In this case, it is ideal for logging because you want a single logger instance used throughout the application.
+
+
+
+## Update: (Multi threading)
+In multi threading approach the above code may generate multiple instances, as more than one instance may access getinstance at the same time, which may lead to creating more than one logger
+Updated code
+```
+import threading
+
+class Logger:
+    # 1. Private static variable to hold the single instance
+    _instance = None
+    _lock = threading.Lock()  # Lock for thread safety
+
+    # 2. Private constructor to prevent instantiation
+    def __init__(self):
+        if Logger._instance is not None:
+            raise Exception("This class is a singleton!")
+        else:
+            Logger._instance = self
+
+    # 3. Public method to provide access to the instance with double-checked locking
+    @staticmethod
+    def get_instance():
+        if Logger._instance is None:
+            with Logger._lock:  # Synchronize only when creating the instance
+                if Logger._instance is None:
+                    Logger()  # Create the instance if it's still None
+        return Logger._instance
+
+    def log(self, message):
+        print(f"Log: {message}")
+
+
+# Example usage
+logger = Logger.get_instance()
+logger.log("Application started.")
+```
