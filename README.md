@@ -54,7 +54,7 @@ The Singleton pattern is useful when you want to ensure that only one instance o
 ## Update: (Multi threading)
 In multi threading approach the above code may generate multiple instances, as more than one instance may access getinstance at the same time, which may lead to creating more than one logger
 Updated code
-```
+```python
 import threading
 
 class Logger:
